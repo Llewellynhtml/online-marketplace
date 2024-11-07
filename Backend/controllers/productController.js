@@ -1,25 +1,25 @@
-const { adminDb } = require("../config/firebase");
+const { db } = require("../config/firebase");
+
+const { collection, addDoc} =require('firebase/firestore')
 
 // Add a product
 const addProduct = async (req, res) => {
   const { name, description, price, category } = req.body;
 
   try {
-    const productDocRef = await adminDb.collection("products").add({
-      name,
-      description,
-      price,
-      category,
-      createdAt: new Date(),
+    const docRef = await addDoc(collection(db, "products"), {
+    name,
+    description,
+    price,
+    category
     });
 
-    res.status(201).json({
-      message: "Product added successfully",
-      id: productDocRef.id,
-    });
-  } catch (error) {
-    console.error("Error adding product:", error);
-    res.status(500).json({ message: "Error adding product", error: error.message });
+    res.status(202).json({
+      message: "Addes successfully "
+    })
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
   }
 };
 
